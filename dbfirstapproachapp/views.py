@@ -30,6 +30,14 @@ def RawSqlDemo(request):
     return render(request, "dbfa/ShowOrders.html", {"Orders": orders})
 
 
+def StoredProcedureDemo(request):
+    cnxn = GetConnection()
+    cursor = cnxn.cursor()
+    cursor.execute("{call USP_GetAllOrders}")
+    orders = cursor.fetchall()
+    return render(request, "dbfa/ShowOrders.html", {"Orders": orders})
+
+
 def GetConnection():
     cnxn = ""
     try:
