@@ -29,8 +29,21 @@
             <td>{{ order.ProductName }}</td>
             <td>{{ order.UnitPrice }}</td>
             <td>{{ order.Quantity }}</td>
-            <td>{{ order.BillAmount }}</td>
-            <td>{{ order.RunningTotal }}</td>
+            {% comment %} <td>{{ order.BillAmount }}</td> {% endcomment %}
+            <td>
+              {% if order.BillAmount == '' %}
+                <b>Sub Total</b>
+              {% else %}
+                {{ order.BillAmount }}
+              {% endif %}
+            </td>
+            <td>
+              {% if order.BillAmount == '' %}
+                <b>{{ order.RunningTotal }}</b>
+              {% else %}
+                {{ order.RunningTotal }}
+              {% endif %}
+            </td>
             <td>{{ order.RunningOrderTotal }}</td>
           </tr>
         {% endfor %}
@@ -42,7 +55,9 @@
           <td></td>
           <td></td>
           <td></td>
-          <td>Grand Total</td>
+          <td>
+            <b>Grand Total</b>
+          </td>
           <td>{{ GrandTotal }}</td>
         </tr>
       </tbody>

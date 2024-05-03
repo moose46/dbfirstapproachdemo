@@ -27,6 +27,9 @@ def RawSqlDemo(request):
     cursor = cnxn.cursor()
     cursor.execute(query)
     orders = cursor.fetchall()
+    cursor.close()
+    cnxn.close()
+
     return render(request, "dbfa/ShowOrders.html", {"Orders": orders})
 
 
@@ -34,6 +37,7 @@ def StoredProcedureDemo(request):
     GrandTotal = 0
     runningTotal = 0
     runningOrderTotal = 0
+    subTotal = 0
 
     cnxn = GetConnection()
     cursor = cnxn.cursor()
@@ -44,41 +48,62 @@ def StoredProcedureDemo(request):
     previousOrderId = 0
     for order in orders:
         if previousOrderId == 0:
-            previousOrderId = order.OrderID
             runningTotal += order.BillAmount
+            previousOrderId = order.OrderID
             runningOrderTotal += order.BillAmount
             GrandTotal += order.BillAmount
+            subTotal += order.BillAmount
             newOrders.append(pushData(order, runningTotal, runningOrderTotal))
         elif previousOrderId == order.OrderID:
             runningTotal += order.BillAmount
             runningOrderTotal += order.BillAmount
             GrandTotal += order.BillAmount
+            subTotal += order.BillAmount
             newOrders.append(pushData(order, runningTotal, runningOrderTotal))
         else:
+            newOrders.append(pushData(0, subTotal, 0))
+            subTotal = 0
             previousOrderId = order.OrderID
             runningOrderTotal = 0
             runningTotal += order.BillAmount
             runningOrderTotal += order.BillAmount
+            subTotal += order.BillAmount
             GrandTotal += order.BillAmount
             newOrders.append(pushData(order, runningTotal, runningOrderTotal))
 
+    newOrders.append(pushData(0, subTotal, 0))
+    cursor.close()
+    cnxn.close()
     return render(
         request, "dbfa/ShowOrders.html", {"Orders": newOrders, "GrandTotal": GrandTotal}
     )
 
 
 def pushData(order, runningTotal, runningOrderTotal):
-    dataToPush = {
-        "OrderID": order.OrderID,
-        "OrderDate": order.OrderDate,
-        "CompanyName": order.CompanyName,
-        "ProductName": order.ProductName,
-        "UnitPrice": order.UnitPrice,
-        "Quantity": order.Quantity,
-        "BillAmount": order.BillAmount,
-        "RunningTotal": runningTotal,
-        "RunningOrderTotal": runningOrderTotal,
-    }
+    if order == 0:
+        dataToPush = {
+            "OrderID": "",
+            "OrderDate": "",
+            "CompanyName": "",
+            "ProductName": "",
+            "UnitPrice": "",
+            "Quantity": "",
+            "BillAmount": "",
+            "RunningTotal": runningTotal,
+            "RunningOrderTotal": "",
+        }
+    else:
+        dataToPush = {
+            "OrderID": order.OrderID,
+            "OrderDate": order.OrderDate,
+            "CompanyName": order.CompanyName,
+            "ProductName": order.ProductName,
+            "UnitPrice": order.UnitPrice,
+            "Quantity": order.Quantity,
+            "BillAmount": order.BillAmount,
+            "RunningTotal": runningTotal,
+            "RunningOrderTotal": runningOrderTotal,
+        }
     return dataToPush
 
 
