@@ -27,4 +27,5 @@ urlpatterns = [
     path("ShowOrders/", views.RawSqlDemo),
     path("StoredProcedureDemo/", views.StoredProcedureDemo),
     path("SPWithOutpuParametersDemo/", views.SPWithOutpuParametersDemo),
+    path("FilteringQuerySetsDemo/", views.FilteringQuerySetsDemo),
 ]
