@@ -17,8 +17,8 @@
         <th>Unit Price</th>
         <th>Quantity</th>
         <th>Bill Amount</th>
-        <th>Running Total</th>
-        <th>Running Order Total</th>
+        <th>Running Total Per Report</th>
+        <th>Running Total Per Order</th>
       </thead>
       <tbody>
         {% for order in Orders %}
@@ -30,9 +30,25 @@
             <td>{{ order.UnitPrice }}</td>
             <td>{{ order.Quantity }}</td>
             <td>{{ order.BillAmount }}</td>
+            <td>{{ order.RunningTotal }}</td>
+            <td>{{ order.RunningOrderTotal }}</td>
           </tr>
         {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>Grand Total</td>
+          <td>{{ GrandTotal }}</td>
+        </tr>
       </tbody>
     </table>
+    <div>
+      <h1>Total Number of orders are {{ Count }}</h1>
+    </div>
   </body>
 </html>

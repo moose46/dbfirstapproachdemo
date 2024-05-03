@@ -31,11 +31,68 @@ def RawSqlDemo(request):
 
 
 def StoredProcedureDemo(request):
+    GrandTotal = 0
+    runningTotal = 0
+    runningOrderTotal = 0
+
     cnxn = GetConnection()
     cursor = cnxn.cursor()
     cursor.execute("{call USP_GetAllOrders}")
     orders = cursor.fetchall()
-    return render(request, "dbfa/ShowOrders.html", {"Orders": orders})
+
+    newOrders = []
+    previousOrderId = 0
+    for order in orders:
+        if previousOrderId == 0:
+            previousOrderId = order.OrderID
+            runningTotal += order.BillAmount
+            runningOrderTotal += order.BillAmount
+            GrandTotal += order.BillAmount
+            newOrders.append(pushData(order, runningTotal, runningOrderTotal))
+        elif previousOrderId == order.OrderID:
+            runningTotal += order.BillAmount
+            runningOrderTotal += order.BillAmount
+            GrandTotal += order.BillAmount
+            newOrders.append(pushData(order, runningTotal, runningOrderTotal))
+        else:
+            previousOrderId = order.OrderID
+            runningOrderTotal = 0
+            runningTotal += order.BillAmount
+            runningOrderTotal += order.BillAmount
+            GrandTotal += order.BillAmount
+            newOrders.append(pushData(order, runningTotal, runningOrderTotal))
+
+    return render(
+        request, "dbfa/ShowOrders.html", {"Orders": newOrders, "GrandTotal": GrandTotal}
+    )
+
+
+def pushData(order, runningTotal, runningOrderTotal):
+    dataToPush = {
+        "OrderID": order.OrderID,
+        "OrderDate": order.OrderDate,
+        "CompanyName": order.CompanyName,
+        "ProductName": order.ProductName,
+        "UnitPrice": order.UnitPrice,
+        "Quantity": order.Quantity,
+        "BillAmount": order.BillAmount,
+        "RunningTotal": runningTotal,
+        "RunningOrderTotal": runningOrderTotal,
+    }
+    return dataToPush
+
+
+def SPWithOutpuParametersDemo(request):
+    cnxn = GetConnection()
+    cursor = cnxn.cursor()
+    count = 0
+    cursor.execute("{call USP_GetOrdersCount(?)}", count)
+    count = cursor.fetchval()
+
+    cursor.execute("{call USP_GetAllOrders}")
+    orders = cursor.fetchall()
+
+    return render(request, "dbfa/ShowOrders.html", {"Orders": orders, "Count": count})
 
 
 def GetConnection():
