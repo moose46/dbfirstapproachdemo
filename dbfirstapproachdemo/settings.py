@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "dbfirstapproachapp",
+    'django.contrib.humanize',
 ]
 ROOT_URLCONF = "dbfirstapproachapp.urls"
 MIDDLEWARE = [

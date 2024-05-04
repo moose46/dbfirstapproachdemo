@@ -40,16 +40,16 @@
     </table>
     <table class="table">
       <tr>
-        <td>Avg</td>
-        <td>{{ Orders.avg }}</td>
-        <td>Max</td>
-        <td>{{ Orders.max }}</td>
-        <td>Min</td>
-        <td>{{ Orders.min }}</td>
-        <td>Count</td>
+        <td><b>Avg</b></td>
+        <td>{{ Orders.avg|floatformat }}</td>
+        <td><b>Max</b></td>
+        <td>{{ Orders.max | floatformat}}</td>
+        <td><b>Min</b></td>
+        <td>{{ Orders.min | floatformat}}</td>
+        <td><b>Count</b></b></td>
         <td>{{ Orders.count }}</td>
-        <td>Sum</td>
-        <td>{{ Orders.sum }}</td>
+        <td><b>Sum</b></td>
+        <td>{{ Orders.sum | floatformat}}</td>
       </tr>
     </table>
   </body>
