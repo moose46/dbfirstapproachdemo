@@ -28,4 +28,5 @@ urlpatterns = [
     path("StoredProcedureDemo/", views.StoredProcedureDemo),
     path("SPWithOutpuParametersDemo/", views.SPWithOutpuParametersDemo),
     path("FilteringQuerySetsDemo/", views.FilteringQuerySetsDemo),
+    path("TwoLevelAccordianDemo/", views.TwoLevelAccordianDemo),
 ]

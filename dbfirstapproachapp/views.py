@@ -3,7 +3,7 @@ from ast import Or
 import pyodbc
 from django.shortcuts import render
 
-from dbfirstapproachapp.models import Categories, Orders
+from dbfirstapproachapp.models import Categories, OrderDetails, Orders
 
 # Create your views here.
 
@@ -188,3 +188,16 @@ def FilteringQuerySetsDemo(request):
     # print(type(Orders))
     # print(str(orders.query))
     return render(request, "dbfa/FilteringDemo.html", {"Orders": context})
+
+
+def TwoLevelAccordianDemo(request):
+    orders = Orders.objects.filter(orderid__range=[10248, 10255]).order_by("orderid")
+    order_ids = [order.orderid for order in orders]
+    order_details_list = OrderDetails.objects.filter(orderid__in=order_ids).order_by(
+        "orderid"
+    )
+    return render(
+        request,
+        "dbfa/OrdersWithAccordian.html",
+        {"orders": orders, "order_details": order_details_list},
+    )
