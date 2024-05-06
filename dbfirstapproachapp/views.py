@@ -3,7 +3,7 @@ from ast import Or
 import pyodbc
 from django.shortcuts import render
 
-from dbfirstapproachapp.models import Categories, OrderDetails, Orders
+from dbfirstapproachapp.models import Categories, Employees, OrderDetails, Orders
 
 # Create your views here.
 
@@ -200,4 +200,31 @@ def TwoLevelAccordianDemo(request):
         request,
         "dbfa/OrdersWithAccordian.html",
         {"orders": orders, "order_details": order_details_list},
+    )
+
+
+def MultilevelAccordianDemo(request):
+    employees_list = Employees.objects.all().order_by("employeeid")
+    order_ids = (
+        Orders.objects.filter(employeeid__in=employees_list)
+        .values_list("orderid", flat=True)
+        .distinct()
+    )
+
+    orders = Orders.objects.filter(
+        orderid__in=order_ids, orderid__range=[10248, 10255]
+    ).order_by("orderid")
+    order_ids = [order.orderid for order in orders]
+
+    order_details_list = OrderDetails.objects.filter(orderid__in=order_ids).order_by(
+        "orderid"
+    )
+    return render(
+        request,
+        "dbfa/MultilevelAccordianDemo.html",
+        {
+            "employees": employees_list,
+            "orders": orders,
+            "order_details": order_details_list,
+        },
     )
