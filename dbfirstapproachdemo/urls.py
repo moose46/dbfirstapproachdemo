@@ -30,4 +30,5 @@ urlpatterns = [
     path("FilteringQuerySetsDemo/", views.FilteringQuerySetsDemo),
     path("TwoLevelAccordianDemo/", views.TwoLevelAccordianDemo),
     path("MultilevelAccordianDemo/", views.MultilevelAccordianDemo),
+    path("ShowOrdersUsingCTT/", views.ShowOrdersUsingCTT, name="ShowOrdersUsingCTT"),
 ]

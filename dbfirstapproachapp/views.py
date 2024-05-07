@@ -228,3 +228,6 @@ def MultilevelAccordianDemo(request):
             "order_details": order_details_list,
         },
     )
+def ShowOrdersUsingCTT(request):
+    print("ping ......")
+    return render(request,"dbfa/ShowOrdersUsingCTT.html")
